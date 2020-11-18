@@ -1,0 +1,9 @@
+title SPA Uusi muistiinpano
+note over selain
+Selain lähettää HTTP POST pyynnön, lähetyksen hoitaa javascript tiedostossa oleva koodi.
+end note
+selain->palvelin: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+palvelin-->selain: Palauttaa selaimen lisäämän JSON muistiinpanon
+note over selain
+Selain ei lataa sivua uudelleen, vaan lisää listaan luodun muistiinpanon.
+end note
