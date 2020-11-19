@@ -1,17 +1,54 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from 'react'
+import ReactDOM from 'react-dom'
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+const App = () => {
+
+  const course = 'Half Stack application development'
+  const part1 = 'Fundamentals of React'
+  const exercises1 = 10
+  const part2 = 'Using props to pass data'
+  const exercises2 = 7
+  const part3 = 'State of a component'
+  const exercises3 = 14
+
+  const Header = (props) => {
+    return(
+      <h1>{props.course}</h1>
+    )
+  }
+
+  const Content = (props) => {
+    return(
+      <div>
+        <p><u>Course is divided to following parts:</u></p>
+        <p></p>
+        <p>Part 1: {props.part1}</p>
+        <p>Exercises: {props.exercises1}</p>
+        <p></p>
+        <p>Part 2: {props.part2}</p>
+        <p>Exercises:{props.exercises2}</p>
+        <p></p>
+        <p>Part 3: {props.part3}</p> 
+        <p>Exercises:{props.exercises3}</p>
+      </div>
+    )
+  }
+
+  const Total = (props) => {
+    return(
+      <p>Course has total of {props.amount} exercises.</p>
+    )
+  }
+
+  
+  return (
+    <div>
+      <Header course={course}/>
+      <Content part1={part1} exercises1={exercises1} part2={part2} exercises2={exercises2} part3={part3} exercises3={exercises3} />
+      <Total amount={exercises1 + exercises2 + exercises3}/>
+    </div>
+  )
+}
+
+ReactDOM.render(<App />, document.getElementById('root'))
