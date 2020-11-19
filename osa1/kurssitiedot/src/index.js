@@ -12,8 +12,8 @@ const Part = (props) => {
   return (
     <p>
       Course part: {props.name}. {props.excercises} Excercises.</p>
-  );
-};
+  )
+}
 const Content = (props) => {
   return (
     <div>
@@ -21,19 +21,19 @@ const Content = (props) => {
       <Part name={props.parts[1].name} excercises={props.parts[1].exercises} />
       <Part name={props.parts[2].name} excercises={props.parts[2].exercises} />
     </div>
-  );
-};
+  )
+}
 
 const Total = (props) => {
   return (
     <p>
-      Total number of excercises{" "}
+      Total number of excercises:  
       {props.parts[0].exercises +
         props.parts[1].exercises +
         props.parts[2].exercises}
     </p>
-  );
-};
+  )
+}
 
 
 
@@ -57,7 +57,7 @@ const App = () => {
     },
   ]
 
-  };
+  }
 
   return (
     <div>
