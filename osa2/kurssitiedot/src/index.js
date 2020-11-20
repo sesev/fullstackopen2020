@@ -1,6 +1,23 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
+
+const arto = {
+  name: 'Arto Hellas',
+  age: 35,
+  education: 'Filosofian tohtori',
+  greet: function() {
+    console.log('hello, my name is', this.name)
+  },
+  doAddition: function(a, b) {    console.log(a + b)  },
+}
+
+
+arto.doAddition(1, 4)        // tulostuu 5
+
+const referenceToAddition = arto.doAddition
+referenceToAddition(10, 15)  // tulostuu 25
+
 const Header = (props) =>{
   return(
       <h1>{props.course.name}</h1>
@@ -40,31 +57,36 @@ const App = () => {
 
   const course = {
     name: 'Half Stack application development',
-    
+    id: 1,
     parts: [
     {
       name: 'Fundamentals of React',
       exercises: 10,
+      id: 1
     },
     {
       name: 'Using props to pass data',
       exercises: 7,
+      id: 2
     },
     {
       name: 'State of a component',
       exercises: 14,
+      id: 3
     },
   ]
+}
 
-  }
+return (
+  <div>
+    <Course course={course} />
+  </div>
+)
 
-  return (
-    <div>
-<Header course={course}/>
-<Content parts={course.parts}/>
-<Total parts={course.parts}/>
-    </div>
-  )
+  
+
+
+
 }
 
 ReactDOM.render(<App />, document.getElementById('root'))
