@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 
 
 const Person = ({ person}) =>  
-(<li>{person.name} {person.number}</li>)
+(<ul><li>{person.name} {person.number}</li></ul>
+  )
  
 const PersonForm =   ({ addName, handleNameChange, newName, handleNewNumber, newNumber,}) => {
  
@@ -19,7 +20,7 @@ const Persons = ({persons, newFilter}) => {
 const filteredPersons = persons.filter(person => person.name.toUpperCase().includes(newFilter.toUpperCase()))
 return (
 <div>
-    {filteredPersons.map(person => <Person key ={person.name} person={person} />)}
+    {filteredPersons.map(person => <Person key ={person.name} person={person} />) }
 </div>)
 
 }
@@ -49,7 +50,7 @@ const App = () => {
     console.log(event.target.value)
     setNewName(event.target.value)
      }
-     
+
   const handleNewNumber = (event) => {
     setNewNumber(event.target.value)
     }
@@ -65,18 +66,18 @@ const App = () => {
 
     setNewName('')
     setNewNumber('')
+      if (newName.length === 0) {
+        alert('You have add a name!')
+        return;
+      } 
+      if (newNumber.length === 0) {
+        alert('You have to add a phonenumber!')
+      }
 
      const alreadyPerson = persons.some((person) => person.name.toUpperCase() === newName.toUpperCase()) 
      if (alreadyPerson) {
        alert(`${newName} is already added to phonebook`)}
-
-      if (newName.length === 0) {
-        alert('You have add a name!')
-        return;
-      }
-      if (newNumber.length === 0) {
-        alert('You have to add a phonenumber!')
-      }
+        else
        setPersons(persons.concat({name: newName, number: newNumber}))
      }
     
@@ -89,8 +90,7 @@ const App = () => {
       <h2>Add a new name:</h2>
       <PersonForm addName={addName} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNewNumber={handleNewNumber} />
       <h2>Numbers</h2>
-      <ul><Persons persons={persons} newFilter={newFilter} /></ul>
-      
+      <Persons persons={persons} newFilter={newFilter} />
       
     </div>
   )

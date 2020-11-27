@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Note from './components/Note'
+import App from './App'
 
 const notes = [
   {
@@ -21,6 +21,7 @@ const notes = [
     date: '2020-01-10T19:20:14.298Z',
     important: true
   }
+
 ]
 
 
