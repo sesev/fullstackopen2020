@@ -10,7 +10,7 @@ const Filter = ({ setSearch, handleSearchChange }) => {
 
 
 
-const Countries = ({ countries, search }) => {
+const Countries = ({ countries, search, setSearch}) => {
 
 
   const Country = ({ country }) => {
@@ -47,7 +47,10 @@ const Countries = ({ countries, search }) => {
                 {filteredCountries.map(country =>
                     <p key={country.name}>
                         {country.name} 
-
+                        <button id={country.name} onClick={() => {
+                            setSearch(country.name)
+                        }}> show
+                        </button>
                     </p>)}
             </ul>
         )
@@ -113,7 +116,7 @@ const Weather = ({weather, setWeather, countries}) => {
   return (
     <div>
       <Filter search={search} handleSearchChange={handleSearchChange} />
-      <Countries countries={countries} search={search} />
+      <Countries countries={countries} search={search} setSearch={setSearch} />
 
     </div>
   )
