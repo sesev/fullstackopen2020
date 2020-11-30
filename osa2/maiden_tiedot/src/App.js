@@ -8,11 +8,24 @@ const Filter = ({ setSearch, handleSearchChange }) => {
   )
 }
 //Maan tarkemmat tiedot + sää
-const Country = ({ country, weather}) => {
+const Country = ({ country, filteredCountries}) => {
   
   //Säätietojen hakeminen
 
-  
+  const [weather, setWeather] = useState('')
+
+  useEffect(() => {
+ 
+    const capital = filteredCountries.map(country => country.capital);
+    
+      axios
+      .get(`http://api.weatherstack.com/current?access_key=6ead52662f7091a49b7f1d0d7ebbd69c&query=${capital[0]}`)
+      .then(response => {
+        setWeather(response.data);
+      });
+    
+    }, [filteredCountries]) 
+    console.log(weather.current)
   return (
     <div>
       <h2>{country.name}</h2>
@@ -25,28 +38,16 @@ const Country = ({ country, weather}) => {
         )}
       </ul>
       <br></br>
+      <p></p>
       <img src={country.flag} width="120px" alt="" />
-      <div>{weather.current.temperature}</div>
-      <div>{weather.current.wind_dir}</div>
     </div>
   )
 }
 //Maalistaus 
-const Countries = ({ countries, search, setSearch}) => {
+const Countries = ({ countries, search, setSearch }) => {
 
   const filteredCountries = countries.filter(country => country.name.toUpperCase().includes(search.toUpperCase()))
-
-  const [weather, setWeather] = useState([])
   
-  useEffect(() => {
-    const capital = filteredCountries.map(country => country.capital);
-    
-      axios
-      .get(`http://api.weatherstack.com/current?access_key=fc35064eafd56f334478558db6a50a53&query=${capital[0]}`)
-      .then(response => {
-        setWeather(response.data);
-      });
-    }, [filteredCountries]) 
 
   if (filteredCountries.length === 1) {
 
@@ -54,7 +55,7 @@ const Countries = ({ countries, search, setSearch}) => {
       <div>
         {filteredCountries.map(country => {
           console.log(countries)
-          return <Country key={country.name} country={country} filteredCountries={filteredCountries} weather={weather}/>
+          return <Country key={country.name} country={country} filteredCountries={filteredCountries} />
         })}
       </div>)
   }
@@ -107,7 +108,9 @@ function App() {
         console.log('maat haettu')
         setCountry(response.data)
       })
-  }, [])
+  }, [setSearch])
+
+
 
   const handleSearchChange = (event) => {
     setSearch(event.target.value)
