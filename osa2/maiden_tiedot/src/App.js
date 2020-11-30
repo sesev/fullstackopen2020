@@ -8,20 +8,10 @@ const Filter = ({ setSearch, handleSearchChange }) => {
   )
 }
 //Maan tarkemmat tiedot + sää
-const Country = ({ country,  filteredCountries}) => {
+const Country = ({ country, weather}) => {
   
   //Säätietojen hakeminen
-  const [weather, setWeather] = useState([])
-  
-  useEffect(() => {
-    const capital = filteredCountries.map(country => country.capital);
-    
-      axios
-      .get(`http://api.weatherstack.com/current?access_key=fc35064eafd56f334478558db6a50a53&query=${capital[0]}`)
-      .then(response => {
-        setWeather(response.data);
-      });
-    }, [filteredCountries]) 
+
   
   return (
     <div>
@@ -36,16 +26,27 @@ const Country = ({ country,  filteredCountries}) => {
       </ul>
       <br></br>
       <img src={country.flag} width="120px" alt="" />
-      <div>{weather.temperature}</div>
-      <div>{weather.wind_dir}</div>
+      <div>{weather.current.temperature}</div>
+      <div>{weather.current.wind_dir}</div>
     </div>
   )
 }
 //Maalistaus 
-const Countries = ({ countries, search, setSearch, setWeather }) => {
+const Countries = ({ countries, search, setSearch}) => {
 
   const filteredCountries = countries.filter(country => country.name.toUpperCase().includes(search.toUpperCase()))
 
+  const [weather, setWeather] = useState([])
+  
+  useEffect(() => {
+    const capital = filteredCountries.map(country => country.capital);
+    
+      axios
+      .get(`http://api.weatherstack.com/current?access_key=fc35064eafd56f334478558db6a50a53&query=${capital[0]}`)
+      .then(response => {
+        setWeather(response.data);
+      });
+    }, [filteredCountries]) 
 
   if (filteredCountries.length === 1) {
 
@@ -53,7 +54,7 @@ const Countries = ({ countries, search, setSearch, setWeather }) => {
       <div>
         {filteredCountries.map(country => {
           console.log(countries)
-          return <Country key={country.name} country={country} filteredCountries={filteredCountries} />
+          return <Country key={country.name} country={country} filteredCountries={filteredCountries} weather={weather}/>
         })}
       </div>)
   }
