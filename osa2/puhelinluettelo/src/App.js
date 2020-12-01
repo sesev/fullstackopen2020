@@ -27,7 +27,17 @@ const Persons = ({filteredPersons, handleRemoveName }) => {
 
 }
 
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
 
+  return (
+    <div className="error">
+      {message}
+    </div>
+  )
+}
 const Filter = ({ setNewFilter, handleFilterChange }) => {
   return (
     <div>Filter shown with: <input value={setNewFilter} onChange={handleFilterChange} /></div>
@@ -51,6 +61,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
 
   const handleNameChange = (event) => {
     console.log(event.target.value)
@@ -73,6 +84,12 @@ const App = () => {
             refreshList()
               console.log('person deleted')
           })
+          .catch(error => {
+  
+              setErrorMessage(`'${name}' was already deleted!`) 
+              setTimeout(() => { setErrorMessage(null) }, 5000)
+              refreshList()
+                      })
 
   }
 }
@@ -103,22 +120,32 @@ const App = () => {
     setNewName('')
     setNewNumber('')
     if (newName.length === 0) {
-      alert('You have add a name!')
+      setErrorMessage(`You have to add a name!`) 
+      setTimeout(() => { setErrorMessage(null) }, 5000)
       return;
     }
     if (newNumber.length === 0) {
-      alert('You have to add a phonenumber!')
+      setErrorMessage(`You have to add a phonenumber!`) 
+      setTimeout(() => { setErrorMessage(null) }, 5000)
     }
     const alreadyPerson = persons.some((person) => person.name.toUpperCase() === newName.toUpperCase())
     
     if (alreadyPerson) {
       if (window.confirm(`Update ${newName} from phonebook?`)) {
-        const updatePerson = persons.find(person => person.name.toUpperCase() === newName.toUpperCase()) 
+        const updatePerson = persons.find(p => p.name.toUpperCase() === newName.toUpperCase()) 
         const updateNumber = {...updatePerson, number: newNumber}
         personService
         .update(updatePerson.id, updateNumber)
-        .then(() => {
+         .catch(error => {
+          setErrorMessage(`'${updatePerson.name}' was already deleted!`) 
+          setTimeout(() => { setErrorMessage(null) }, 5000)
           refreshList()
+        })
+        .then(() => {
+        setErrorMessage(`'${updatePerson.name}' phonenumber was updated.`) 
+        setTimeout(() => { setErrorMessage(null) }, 5000)
+       
+        refreshList()
         })
       }}
     else {
@@ -129,13 +156,14 @@ const App = () => {
       setPersons(persons.concat({ name: newName, number: newNumber }))
       refreshList()
      })
-      alert(`${newName} added to the contact list`)
-      
+      setErrorMessage(`'${newName}' added to the contact list.`) 
+      setTimeout(() => { setErrorMessage(null) }, 5000)
     }
   }
 
   return (
     <div>
+      <Notification message={errorMessage} />
 
       <h2>Phonebook</h2>
       <div></div>

@@ -2,7 +2,7 @@
   "persons": [
     {
       "name": "Arto Hellas",
-      "number": "52342342",
+      "number": "3523423",
       "id": 1
     },
     {
@@ -21,39 +21,14 @@
       "id": 4
     },
     {
-      "name": "arty",
-      "number": "453534",
-      "id": 8
-    },
-    {
-      "name": "a",
-      "number": "464535",
-      "id": 9
-    },
-    {
       "name": "afdfsasfd",
       "number": "4232423",
       "id": 10
     },
     {
-      "name": "adsfasdf",
-      "number": "afdadsf",
+      "name": "ar32423",
+      "number": "r3432",
       "id": 11
-    },
-    {
-      "name": "Arto Kaljanaama",
-      "number": "453453",
-      "id": 12
-    },
-    {
-      "name": "KALJA NAAMA",
-      "number": "3525234",
-      "id": 13
-    },
-    {
-      "name": "art",
-      "number": "adf",
-      "id": 14
     }
   ]
 }
