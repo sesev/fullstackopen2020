@@ -3,9 +3,9 @@ import personService from './services/persons'
 import axios from 'axios'
 
 
-const Person = ({ person, removeName }) => 
+const Person = ({ person, handleRemoveName }) => 
   
-  (<ul><li>{person.name} {person.number}<button onClick={removeName}>Delete</button></li></ul>
+  (<ul><li>{person.name} {person.number}<button onClick={(event) => {event.preventDefault(); handleRemoveName(person.id, person.name)}}>delete</button></li></ul>
   )
   
 
@@ -19,15 +19,15 @@ const PersonForm = ({ addName, handleNameChange, newName, handleNewNumber, newNu
   </form>)
 }
 
-const Persons = ({ persons, newFilter }) => {
+const Persons = ({filteredPersons, handleRemoveName }) => {
 
-  const filteredPersons = persons.filter(person => person.name.toUpperCase().includes(newFilter.toUpperCase()))
   return (
     <div>
-      {filteredPersons.map(person => <Person key={person.name} person={person} />)}
+      {filteredPersons.map(person => <Person key={person.name} person={person} handleRemoveName={handleRemoveName} />)}
     </div>)
 
 }
+
 
 const Filter = ({ setNewFilter, handleFilterChange }) => {
   return (
@@ -66,6 +66,23 @@ const App = () => {
     setNewFilter(event.target.value)
   }
 
+ const handleRemoveName = (id, name) => {
+  if (window.confirm(`Delete ${name} from phonebook?`)) {
+      personService
+          .deletePerson(id)
+          .then(() => {
+            setPersons(persons.filter((person) => person.id !== id))
+              console.log('person deleted')
+          })
+
+  }
+}
+
+
+
+
+  const filteredPersons = persons.filter(person => person.name.toUpperCase().includes(newFilter.toUpperCase()))
+
 
   const addName = (event) => {
 
@@ -76,11 +93,7 @@ const App = () => {
       name: newName,
       number: newNumber,
     }
-    
-    function removeName  () { 
-    axios
-    .delete('http://localhost:3001/persons', newPersona)}
-    
+        
     setNewName('')
     setNewNumber('')
     if (newName.length === 0) {
@@ -114,7 +127,7 @@ const App = () => {
       <h2>Add a new name:</h2>
       <PersonForm addName={addName} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNewNumber={handleNewNumber} />
       <h2>Numbers</h2>
-      <Persons persons={persons} newFilter={newFilter} />
+      <Persons persons={persons} newFilter={newFilter} filteredPersons={filteredPersons} handleRemoveName={handleRemoveName}/>
 
 
     </div>
