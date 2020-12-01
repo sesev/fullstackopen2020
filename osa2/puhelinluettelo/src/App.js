@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import personService from './services/persons'
-import axios from 'axios'
 
 
 const Person = ({ person, handleRemoveName }) => 
@@ -71,14 +70,21 @@ const App = () => {
       personService
           .deletePerson(id)
           .then(() => {
-            setPersons(persons.filter((person) => person.id !== id))
+            refreshList()
               console.log('person deleted')
           })
 
   }
 }
 
-
+  const refreshList = ()  => {
+    personService
+      .getAll()
+      .then(response => {
+        console.log('lista päivitetty lisäyksen/poiston/päivityksen')
+        setPersons(response.data)
+      })
+  }
 
 
   const filteredPersons = persons.filter(person => person.name.toUpperCase().includes(newFilter.toUpperCase()))
@@ -104,17 +110,27 @@ const App = () => {
       alert('You have to add a phonenumber!')
     }
     const alreadyPerson = persons.some((person) => person.name.toUpperCase() === newName.toUpperCase())
+    
     if (alreadyPerson) {
-      alert(`${newName} is already added to phonebook`)
-    }
+      if (window.confirm(`Update ${newName} from phonebook?`)) {
+        const updatePerson = persons.find(person => person.name.toUpperCase() === newName.toUpperCase()) 
+        const updateNumber = {...updatePerson, number: newNumber}
+        personService
+        .update(updatePerson.id, updateNumber)
+        .then(() => {
+          refreshList()
+        })
+      }}
     else {
 
      personService
      .create(newPersona)
      .then(response => {
       setPersons(persons.concat({ name: newName, number: newNumber }))
+      refreshList()
      })
       alert(`${newName} added to the contact list`)
+      
     }
   }
 
