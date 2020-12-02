@@ -8,7 +8,7 @@ const Header = ({course}) =>{
   
   const Part = ( {parts} ) => {
     return (
-      <div><ul><li>{parts.name}. {" "} {parts.exercises} exercises</li></ul></div>
+      <div><ul><li><b>{parts.name}</b>: {" "} {parts.exercises} exercises</li></ul></div>
     )
   }
   const Content = ({course}) => {
