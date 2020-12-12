@@ -16,5 +16,13 @@
   "bugs": {
     "url": "https://github.com/sesev/fullstackopen2020/issues"
   },
-  "homepage": "https://github.com/sesev/fullstackopen2020#readme"
+  "homepage": "https://github.com/sesev/fullstackopen2020#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "http": "0.0.1-security",
+    "mongoose": "^5.11.7",
+    "nodemon": "^2.0.6"
+  }
 }
