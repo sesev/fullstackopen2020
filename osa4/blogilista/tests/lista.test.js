@@ -1,10 +1,9 @@
 const listHelper = require('../utils/list_helper')
-const Blog = require('../models/blog')
 const supertest = require('supertest')
 const mongoose = require('mongoose')
 const app = require('../app')
 const api = supertest(app)
-const blogsRouter = require('../controllers/blogs')
+
 
 const blogs = [
   {
@@ -57,43 +56,6 @@ const blogs = [
   }
 ]
 
-test('notes are returned as json', () => {
-blogsRouter.get('/', (request, response) => {
-  Blog.find({}).then(blogs => {
-    response.json(blogs.map(blog => blog.toJSON()))
-  })
-})})
-/* 
-
-beforeEach(async () => {
-  await Blogs.deleteMany({})
-  let blogObject = new Blog(blogs[0])
-  await blogObject.save()
-  blogObject = new Blog(blogs[1])
-  await blogObject.save()
-})
- */
-
-/* 
-describe(`Let's test /api/blogs for HTTP GET request!`, () => {
-  test('HTTP GET returns blogs in json', async () => {
-    await api
-      .get('/api/blogs')
-      .expect(200)
-      .expect('Content-Type', /application\/json/)
-  })
-
-  afterAll(() => {
-    mongoose.connection.close()
-  })
-}) */
-/* 
-describe(`Let's get the blog id!`, () => {
-  test(`get and parse blog id from mongodb`, async () => {
-    const result = await api.get(`/api/blogs`)
-    expect(result.body[0].id).toBeDefined()
-  })
-}) */
 
 
 describe('dummy', () => {
@@ -147,6 +109,8 @@ describe('Author with most blogs', () => {
       blogs: 3,
     })
   })
+})
+
   describe('Author with most likes', () => {
     test('returns the author with most likes in total', () => {
       const result = listHelper.mostLikes(blogs)
@@ -156,4 +120,3 @@ describe('Author with most blogs', () => {
       })
     })
   })
-})
