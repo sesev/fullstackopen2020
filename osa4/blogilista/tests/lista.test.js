@@ -1,4 +1,10 @@
 const listHelper = require('../utils/list_helper')
+const Blog = require('../models/blog')
+const supertest = require('supertest')
+const mongoose = require('mongoose')
+const app = require('../app')
+const api = supertest(app)
+const blogsRouter = require('../controllers/blogs')
 
 const blogs = [
   {
@@ -48,10 +54,49 @@ const blogs = [
     url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
     likes: 2,
     __v: 0
-  }  
+  }
 ]
 
- describe('dummy', () => {
+test('notes are returned as json', () => {
+blogsRouter.get('/', (request, response) => {
+  Blog.find({}).then(blogs => {
+    response.json(blogs.map(blog => blog.toJSON()))
+  })
+})})
+/* 
+
+beforeEach(async () => {
+  await Blogs.deleteMany({})
+  let blogObject = new Blog(blogs[0])
+  await blogObject.save()
+  blogObject = new Blog(blogs[1])
+  await blogObject.save()
+})
+ */
+
+/* 
+describe(`Let's test /api/blogs for HTTP GET request!`, () => {
+  test('HTTP GET returns blogs in json', async () => {
+    await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+  })
+
+  afterAll(() => {
+    mongoose.connection.close()
+  })
+}) */
+/* 
+describe(`Let's get the blog id!`, () => {
+  test(`get and parse blog id from mongodb`, async () => {
+    const result = await api.get(`/api/blogs`)
+    expect(result.body[0].id).toBeDefined()
+  })
+}) */
+
+
+describe('dummy', () => {
   test('dummy returns 1', () => {
     const blogs = []
     const result = listHelper.dummy(blogs)
@@ -60,7 +105,7 @@ const blogs = [
 })
 
 describe('total likes', () => {
-  
+
   const listWithOneBlog = [
     {
       _id: '5a422aa71b54a676234d17f8',
@@ -74,14 +119,14 @@ describe('total likes', () => {
   test('when list has only one blog equals the likes of that', () => {
     const result = listHelper.totalLikes(listWithOneBlog)
     expect(result).toBe(5)
-  
+
   })
 
 
   test('returns total number of likes for all blogs', () => {
     const result = listHelper.totalLikes(blogs)
     expect(result).toBe(36)
-  }) 
+  })
 })
 
 describe('returns most liked blog', () => {
@@ -92,8 +137,8 @@ describe('returns most liked blog', () => {
       author: "Edsger W. Dijkstra",
       likes: 12
     })
-    })
   })
+})
 describe('Author with most blogs', () => {
   test('returns the author with most blogs', () => {
     const result = listHelper.mostBlogs(blogs)
@@ -102,12 +147,18 @@ describe('Author with most blogs', () => {
       blogs: 3,
     })
   })
-describe('Author with most likes', () => {
-  test('returns the author with most likes in total', () => {
-    const result = listHelper.mostLikes(blogs)
-    expect(result).toEqual({
-      author: 'Edsger W. Dijkstra',
-      likes: 17,
+  describe('Author with most likes', () => {
+    test('returns the author with most likes in total', () => {
+      const result = listHelper.mostLikes(blogs)
+      expect(result).toEqual({
+        author: 'Edsger W. Dijkstra',
+        likes: 17,
+      })
     })
   })
-})})
+})
+
+
+afterAll(() => {
+  mongoose.connection.close()
+})
