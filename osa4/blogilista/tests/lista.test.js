@@ -157,8 +157,3 @@ describe('Author with most blogs', () => {
     })
   })
 })
-
-
-afterAll(() => {
-  mongoose.connection.close()
-})

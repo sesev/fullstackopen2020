@@ -9,11 +9,11 @@ const mongoose = require('mongoose')
 
 
 mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
-  .then(result => {
-    console.log('Yhteys databaseen muodostettu')
+  .then(() => {
+    logger.info('Yhteys databaseen muodostettu')
   })
   .catch((error) => {
-    console.log('Virhe yhdistäessä MongoDB:', error.message)
+    logger.error('Virhe yhdistäessä MongoDB:', error.message)
   })
 
 app.use(cors())
