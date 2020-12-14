@@ -1,3 +1,7 @@
+const Blog = require('../models/blog')
+
+
+
 const dummy = (blogs) => {
   return 1
 }
@@ -47,6 +51,10 @@ const mostBlogs = (blogs) => {
   return mostBlogsByAuthor
 }
 
+  
+
+
+
 const mostLikes = (blogs) => {
   const authors = blogs.map((blog) => blog.author)
   let combinedAuthor = [...new Set(authors)]
@@ -69,4 +77,11 @@ const mostLikes = (blogs) => {
   return likesByAuthor.reduce((a, b) => (a.likes > b.likes ? a : b))
 }
 
-module.exports = { dummy, totalLikes, mostLikedBlog, mostBlogs, mostLikes }
+
+const blogsInDb = async () => {
+  const blogs = await Blog.find({})
+  return blogs.map(blog => blog.toJSON())
+}
+
+
+module.exports = { dummy, totalLikes, mostLikedBlog, mostBlogs, mostLikes, blogsInDb }
