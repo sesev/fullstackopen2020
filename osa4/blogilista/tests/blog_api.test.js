@@ -27,7 +27,7 @@ const initialBlogs = [
 
 
 //4.8
-describe('when there is initially some notes saved', () => {
+describe('When there is initially some blogs saved', () => {
 
   beforeEach(async () => {
     await Blog.deleteMany({})
@@ -37,7 +37,7 @@ describe('when there is initially some notes saved', () => {
     await Promise.all(promiseArray)
   })
 
-  test('blogs are returned as json', async () => {
+  test('Blogs are returned as json', async () => {
   await api
     .get('/api/blogs')
     .expect(200)
@@ -45,13 +45,13 @@ describe('when there is initially some notes saved', () => {
 })
 
 //4.9
-test('blog identifier is returned as a formatted id.', async () => {
+test('Blog identifier is returned as a formatted id.', async () => {
   const response = await api.get('/api/blogs');
   expect(response.body[0].id).toBeDefined();
 })
 })
 //4.10
-describe('checks that blogs are formed right', () => {
+describe('Checks that blogs are formed right', () => {
 
   beforeEach(async () => {
     await Blog.deleteMany({})
@@ -60,7 +60,7 @@ describe('checks that blogs are formed right', () => {
     const promiseArray = blogObjects.map((blog) => blog.save())
     await Promise.all(promiseArray)
   })
-test('a valid blog can be added ', async () => {
+test('A valid blog can be added ', async () => {
   const newBlog = {
     title: "This is test blog",
     author: "Kaitsu Karkola",
@@ -79,7 +79,7 @@ test('a valid blog can be added ', async () => {
 })
 
 //4.11
-test('if blog has no likes value added, set likes to 0.', async () => {
+test('If blog has no likes value added, set likes to 0.', async () => {
   const noLikesBlog = {
     title: 'A Blog Nobody loved',
     author: 'Kaitsu Karkola',
@@ -94,10 +94,10 @@ test('if blog has no likes value added, set likes to 0.', async () => {
 
   const blogsAtEnd = await listHelper.blogsInDb()
   expect(blogsAtEnd).toHaveLength(initialBlogs.length + 1)
-  expect(blogsAtEnd[initialBlogs.length].likes).toEqual("0")
+  expect(blogsAtEnd[initialBlogs.length].likes).toEqual(0)
 })
 //4.12
-test('if blog has no title or url, respond is status 400 bad request', async () => {
+test('If blog has no title or url, respond code is status 400 bad request.', async () => {
   const noTitleBlog = {
     author: 'Kaitsu Karkola',
     url: 'http://onewithouttitle.com',
@@ -125,7 +125,7 @@ test('if blog has no title or url, respond is status 400 bad request', async () 
 //Get blog by id 
 describe('viewing a specific note', () => {
 
-  test('succeeds with a valid id', async () => {
+  test('Has to succeed with a valid ID.', async () => {
     const blogsAtStart = await listHelper.blogsInDb()
 
     const blogToView = blogsAtStart[0]
@@ -138,7 +138,7 @@ describe('viewing a specific note', () => {
   })
   
 
-  test('fails with statuscode 404 if note does not exist', async () => {
+  test('Has to fail with statuscode 404 if ID is valid but non-existing.', async () => {
     const validNonexistingId = '5a422a851b54a676234d17f6'
 
     console.log(validNonexistingId)
@@ -148,16 +148,28 @@ describe('viewing a specific note', () => {
       .expect(404)
       return
   })
-//statuskoodi 400 ei jostain syystä palaudu, vaan selain jää hakemaan olematonta sivua
-/*   test('fails with statuscode 400 id is invalid', async () => {
-    const invalidId = '5a3d5da59070081a82a3445'
 
+    test('Has to fail with statuscode 400 if ID is in invalid form.', async () => {
+    const invalidId = '5a3d5da59070081a82a3445'
     await api
       .get(`/api/blogs/${invalidId}`)
       .expect(400)
       return
-  }) */
+  })  
 })
+describe('manipulating a blog', () => {
+test('Has to succeed if blog ID is valid.', async () => {
+  const blogsAtBeginning = await listHelper.blogsInDb();
+  const blogToDelete= blogsAtBeginning[0];
+
+  await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+  const blogsAtEnd = await listHelper.blogsInDb();
+
+  const titles = blogsAtEnd.map((blog) => blog.title);
+  expect(titles).not.toContain(blogToDelete.title);
+})
+})
+
 
 
 
