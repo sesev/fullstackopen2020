@@ -56,7 +56,6 @@ test('a valid blog can be added ', async () => {
     url: "http://www.google.com",
     likes: 10
   }
-
   await api
     .post('/api/blogs')
     .send(newBlog)
@@ -68,7 +67,43 @@ test('a valid blog can be added ', async () => {
   expect(title).toContain('This is test blog')
 })
 
+//4.11
+test('if blog has no likes value added, set likes to 0.', async () => {
+  const noLikesBlog = {
+    title: 'A Blog Nobody loved',
+    author: 'Kaitsu Karkola',
+    url: 'http://onewithoutlove.com',
+  }
 
+  await api
+    .post('/api/blogs')
+    .send(noLikesBlog)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await listHelper.blogsInDb()
+  expect(blogsAtEnd).toHaveLength(initialBlogs.length + 1)
+  expect(blogsAtEnd[initialBlogs.length].likes).toEqual("0")
+})
+
+
+
+//Get blog by id 
+describe('viewing a specific note', () => {
+
+  test('succeeds with a valid id', async () => {
+    const blogsAtStart = await listHelper.blogsInDb()
+
+    const blogToView = blogsAtStart[0]
+
+    const resultBlog = await api
+      .get(`/api/notes/${blogToView.id}`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    expect(resultBlog.body).toEqual(blogToView)
+  })
+})
 afterAll(() => {
   mongoose.connection.close()
 })
