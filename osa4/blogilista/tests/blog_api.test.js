@@ -4,17 +4,6 @@ const supertest = require('supertest')
 const mongoose = require('mongoose')
 const app = require('../app')
 const api = supertest(app)
-const blogsRouter = require('../controllers/blogs')
-
-
-beforeEach(async () => {
-  await Blog.deleteMany({})
-
-  const blogObjects = initialBlogs.map((blog) => new Blog(blog))
-  const promiseArray = blogObjects.map((blog) => blog.save())
-  await Promise.all(promiseArray)
-})
-
 
 const initialBlogs = [
   {
@@ -34,8 +23,21 @@ const initialBlogs = [
     __v: 0,
   },
 ]
+
+
+
 //4.8
-test('blogs are returned as json', async () => {
+describe('when there is initially some notes saved', () => {
+
+  beforeEach(async () => {
+    await Blog.deleteMany({})
+  
+    const blogObjects = initialBlogs.map((blog) => new Blog(blog))
+    const promiseArray = blogObjects.map((blog) => blog.save())
+    await Promise.all(promiseArray)
+  })
+
+  test('blogs are returned as json', async () => {
   await api
     .get('/api/blogs')
     .expect(200)
@@ -47,8 +49,17 @@ test('blog identifier is returned as a formatted id.', async () => {
   const response = await api.get('/api/blogs');
   expect(response.body[0].id).toBeDefined();
 })
-
+})
 //4.10
+describe('checks that blogs are formed right', () => {
+
+  beforeEach(async () => {
+    await Blog.deleteMany({})
+  
+    const blogObjects = initialBlogs.map((blog) => new Blog(blog))
+    const promiseArray = blogObjects.map((blog) => blog.save())
+    await Promise.all(promiseArray)
+  })
 test('a valid blog can be added ', async () => {
   const newBlog = {
     title: "This is test blog",
@@ -63,7 +74,7 @@ test('a valid blog can be added ', async () => {
     .expect('Content-Type', /application\/json/)
   const blogsAtEnd = await listHelper.blogsInDb()
   expect(blogsAtEnd.length).toBe(initialBlogs.length + 1)
-  const title = blogsAtEnd.map(n => n.title)
+  const title = blogsAtEnd.map(res => res.title)
   expect(title).toContain('This is test blog')
 })
 
@@ -85,8 +96,31 @@ test('if blog has no likes value added, set likes to 0.', async () => {
   expect(blogsAtEnd).toHaveLength(initialBlogs.length + 1)
   expect(blogsAtEnd[initialBlogs.length].likes).toEqual("0")
 })
+//4.12
+test('if blog has no title or url, respond is status 400 bad request', async () => {
+  const noTitleBlog = {
+    author: 'Kaitsu Karkola',
+    url: 'http://onewithouttitle.com',
+    likes: '10'
+  }
+  const noUrlBlog = {
+    title: 'The blog without url',
+    author: 'Kaitsu Karkola',
+    likes: '10'
+  }
+  await api
+    .post('/api/blogs')
+    .send(noTitleBlog)
+    .expect(400)
+    .expect('Content-Type', /application\/json/);
 
-
+  await api
+    .post('/api/blogs')
+    .send(noUrlBlog)
+    .expect(400)
+    .expect('Content-Type', /application\/json/);
+})
+})
 
 //Get blog by id 
 describe('viewing a specific note', () => {
@@ -97,13 +131,36 @@ describe('viewing a specific note', () => {
     const blogToView = blogsAtStart[0]
 
     const resultBlog = await api
-      .get(`/api/notes/${blogToView.id}`)
+      .get(`/api/blogs/${blogToView.id}`)
       .expect(200)
       .expect('Content-Type', /application\/json/)
-
     expect(resultBlog.body).toEqual(blogToView)
   })
+  
+
+  test('fails with statuscode 404 if note does not exist', async () => {
+    const validNonexistingId = '5a422a851b54a676234d17f6'
+
+    console.log(validNonexistingId)
+
+    await api
+      .get(`/api/blogs/${validNonexistingId}`)
+      .expect(404)
+      return
+  })
+//statuskoodi 400 ei jostain syystä palaudu, vaan selain jää hakemaan olematonta sivua
+/*   test('fails with statuscode 400 id is invalid', async () => {
+    const invalidId = '5a3d5da59070081a82a3445'
+
+    await api
+      .get(`/api/blogs/${invalidId}`)
+      .expect(400)
+      return
+  }) */
 })
+
+
+
 afterAll(() => {
   mongoose.connection.close()
 })

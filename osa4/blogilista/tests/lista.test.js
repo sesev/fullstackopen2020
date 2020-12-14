@@ -1,6 +1,5 @@
 const listHelper = require('../utils/list_helper')
 const supertest = require('supertest')
-const mongoose = require('mongoose')
 const app = require('../app')
 const api = supertest(app)
 

@@ -6,6 +6,14 @@ const Blog = require('../models/blog')
     response.json(blogs.map((returnedBlog) => returnedBlog.toJSON()))
   })
 
+  blogsRouter.get('/:id', async (request, response) => {
+    const blog = await Blog.findById(request.params.id)
+    if (blog) {
+      response.json(blog.toJSON())
+    } else {
+      response.status(404).end()
+    }
+  })
 
 blogsRouter.post('/', async (request, response, next) => {
     const body = request.body
