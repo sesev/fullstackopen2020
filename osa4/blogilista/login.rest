@@ -1,0 +1,10 @@
+post http://localhost:3003/api/blogs
+Content-type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxhdXJpIiwiaWQiOiI1ZmQ3NTA4ZmUwNGI2M2IzOGVjZmZmZGMiLCJpYXQiOjE2MDc5NTAxODB9.nRqG46YOhPTx95M1IeebC4kjxi9yMk55z8CLsnqV1EA
+
+{
+    "title": "Kirja on tämän tyypin",
+    "author": "Lauri",
+    "url": "www.google.com",
+    "likes": "666"
+}

@@ -1,5 +1,7 @@
 const listHelper = require('../utils/list_helper')
 const supertest = require('supertest')
+require('express-async-errors')
+const mongoose = require('mongoose')
 const app = require('../app')
 const api = supertest(app)
 
@@ -118,3 +120,8 @@ describe('Author with most blogs', () => {
       })
     })
   })
+
+  
+afterAll(() => {
+  mongoose.connection.close()
+})
