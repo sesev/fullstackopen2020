@@ -38,15 +38,14 @@ describe('when there is initially one user at db', () => {
     expect(usernames).toContain(newUser.username)
   })
 
-  
-
-/*   test('creation fails with proper statuscode and message if username already taken', async () => {
-    const usersAtStart = await helper.usersInDb()
+  //jostain syystä testi ei mene läpi, mutta todellisuudessa duplikaatin lisääminen ei onnistu.
+  test('creation fails with proper statuscode and message if username already taken', async () => {
+    const usersAtStart = await listHelper.usersInDb()
 
     const newUser = {
-      username: 'root',
-      name: 'Superuser',
-      password: 'salainen',
+      username: 'mluukkai',
+      name: 'Matti Luukkainen',
+      password: 'password',
     }
 
     const result = await api
@@ -59,5 +58,5 @@ describe('when there is initially one user at db', () => {
 
     const usersAtEnd = await helper.usersInDb()
     expect(usersAtEnd).toHaveLength(usersAtStart.length)
-  }) */
+  })
 })

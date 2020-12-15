@@ -1,10 +1,5 @@
 const listHelper = require('../utils/list_helper')
-const supertest = require('supertest')
 require('express-async-errors')
-const mongoose = require('mongoose')
-const app = require('../app')
-const api = supertest(app)
-
 const blogs = [
   {
     _id: "5a422a851b54a676234d17f7",
@@ -81,7 +76,6 @@ describe('total likes', () => {
   test('when list has only one blog equals the likes of that', () => {
     const result = listHelper.totalLikes(listWithOneBlog)
     expect(result).toBe(5)
-
   })
 
 
@@ -89,6 +83,8 @@ describe('total likes', () => {
     const result = listHelper.totalLikes(blogs)
     expect(result).toBe(36)
   })
+  
+
 })
 
 describe('returns most liked blog', () => {
@@ -109,6 +105,7 @@ describe('Author with most blogs', () => {
       blogs: 3,
     })
   })
+
 })
 
   describe('Author with most likes', () => {
@@ -118,10 +115,6 @@ describe('Author with most blogs', () => {
         author: 'Edsger W. Dijkstra',
         likes: 17,
       })
+
     })
   })
-
-  
-afterAll(() => {
-  mongoose.connection.close()
-})
