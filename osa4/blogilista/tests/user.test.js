@@ -6,7 +6,7 @@ const User = require('../models/user')
 const app = require('../app')
 const api = supertest(app)
 
-describe('when there is initially one user at db', () => {
+describe('User management tests', () => {
   beforeEach(async () => {
     await User.deleteMany({})
 
@@ -20,11 +20,10 @@ describe('when there is initially one user at db', () => {
     const usersAtStart = await listHelper.usersInDb()
 
     const newUser = {
-      username: 'mluukkai',
-      name: 'Matti Luukkainen',
-      password: 'salainen',
+      username: 'kaitsu',
+      name: 'kaitsu',
+      password: 'karkola',
     }
-
     await api
       .post('/api/users')
       .send(newUser)
@@ -34,29 +33,65 @@ describe('when there is initially one user at db', () => {
     const usersAtEnd = await listHelper.usersInDb()
     expect(usersAtEnd).toHaveLength(usersAtStart.length + 1)
 
-    const usernames = usersAtEnd.map(u => u.username)
-    expect(usernames).toContain(newUser.username)
+    const userList = usersAtEnd.map(user => user.username)
+    expect(userList).toContain(newUser.username)
   })
 
-  //jostain syystä testi ei mene läpi, mutta todellisuudessa duplikaatin lisääminen ei onnistu.
   test('creation fails with proper statuscode and message if username already taken', async () => {
-    const usersAtStart = await listHelper.usersInDb()
 
-    const newUser = {
-      username: 'mluukkai',
-      name: 'Matti Luukkainen',
+    const replicateUser = {
+      username: 'root',
+      name: 'root',
       password: 'password',
     }
 
-    const result = await api
+    const duplicateError = await api
       .post('/api/users')
-      .send(newUser)
+      .send(replicateUser)
       .expect(400)
       .expect('Content-Type', /application\/json/)
 
-    expect(result.body.error).toContain('`username` to be unique')
-
-    const usersAtEnd = await helper.usersInDb()
-    expect(usersAtEnd).toHaveLength(usersAtStart.length)
+    expect(duplicateError.body.error).toContain('User validation failed: username: Error, expected `username` to be unique. Value: `root`')
   })
+
+
+
+  test('invalid users with non acceptable username or password are rejected with correct status code', async () => {
+    const usersAtStart = await listHelper.usersInDb()
+
+    const userBadUsername = {
+      username: 'lo',
+      name: 'Kaitsu Karkola',
+      password: 'kakemies'
+    }
+
+    const userBadPassword = {
+      username: 'kaitsu',
+      name: 'Kaitsu Karkola',
+      password: 'lo'
+    }
+
+    await api
+      .post('/api/users')
+      .send(userBadUsername)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    await api
+      .post('/api/users')
+      .send(userBadPassword)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+
+    const usersAtEnd = await listHelper.usersInDb()
+    expect(usersAtEnd).toHaveLength(usersAtStart.length)
+    const usernames = usersAtEnd.map((users) => users.username)
+    expect(usernames).not.toContain(userBadUsername.username)
+    expect(usernames).not.toContain(userBadUsername.userBadPassword)
+  })
+
+})
+afterAll(() => {
+  mongoose.connection.close()
 })

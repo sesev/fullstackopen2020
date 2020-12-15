@@ -24,9 +24,13 @@ const errorHandler = (error, request, response, next) => {
   next(error)
 }
 const tokenExtractor = (request, response, next) => {
+
   const authorization = request.get('authorization')
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
     request.token = authorization.substring(7)
+  }
+  if (!response.status(200)) {
+    return response.status(401).send({ error: 'Not valid authorization token!' })
   }
 
   next()
