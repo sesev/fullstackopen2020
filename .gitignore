@@ -920,3 +920,6 @@ harjoittelua/part3-notes-backend-part5-1/utils/for_testing.js
 harjoittelua/part3-notes-backend-part5-1/utils/logger.js
 harjoittelua/part3-notes-backend-part5-1/utils/middleware.js
 harjoittelua/notes4-1/part3-notes-backend
+harjoittelua/part3-notes-backend
+harjoittelua/notes4-1/part3-notes-backend
+.gitignore
