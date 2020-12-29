@@ -16,8 +16,6 @@ const BlogForm = ( { createBlog }) => {
     setNewBlogUrl(event.target.value)
   }
   const handleAddBlog = async (event) => {
-
-    
     event.preventDefault()
     await createBlog({ 
        title: newBlogTitle,
@@ -25,25 +23,7 @@ const BlogForm = ( { createBlog }) => {
        url: newBlogUrl
     })
    }
-    
-    
-    /* try {
-      await blogService.create({ title, author, url })
-      setSuccessMessage(`Blog "${title}" added succesfully, written by: ${author}.`)
-      setTimeout(() => {
-        setSuccessMessage(null)
-      }, 5000)
-      blogList()
-    }
-
-    catch (exception) {
-      setErrorMessage('Blog post failed')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-    }
-  } */
-  
+       
   return (
 
     <form onSubmit={handleAddBlog}>

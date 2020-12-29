@@ -16,9 +16,10 @@ const App = () => {
   const [successMessage, setSuccessMessage] = useState(null)
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
+    blogService.getAll().then(blogs => {
+      sortBlogs(blogs)
       setBlogs(blogs)
-    )
+    })
   }, [])
 
 
@@ -132,9 +133,29 @@ const blogForm = () => (
 
 const blogList = () => (
     blogs.map(blog => 
-          <Blog key={blog.id} blog={blog} /> 
+          <Blog key={blog.id} blog={blog} handleRemoveBlog={handleRemoveBlog} bloguser={user.username}/> 
 )
 )
+
+
+const sortBlogs = blogs => {
+  return blogs.sort((a, b) => {
+    return b.likes - a.likes
+  })
+}
+
+const handleRemoveBlog = async (event, blog) => {
+  event.preventDefault()
+  const result = window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)
+
+  if (result === true) {
+    console.log(blog.id)
+    let id = blog.id
+    await blogService.remove(id)
+    const afterRemove = blogs.filter(poistettava => poistettava.id !== blog.id)
+    setBlogs(afterRemove)
+  }
+}
 
 
 
