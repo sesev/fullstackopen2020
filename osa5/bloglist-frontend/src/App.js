@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 import React, { useState, useRef, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
@@ -76,13 +77,13 @@ const App = () => {
   }
 
   function refreshPage() {
-    window.location.reload();
+    window.location.reload()
   }
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <div>
         username
-          <input
+        <input
           type="text"
           value={username}
           name="Username"
@@ -91,7 +92,7 @@ const App = () => {
       </div>
       <div>
         password
-          <input
+        <input
           type="password"
           value={password}
           name="Password"
@@ -102,60 +103,60 @@ const App = () => {
     </form>
   )
 
-const handleAddBlog = (blogObject) => {
-  blogFormRef.current.toggleVisibility()
-  blogService
-  .create(blogObject)
-  .then(returnedBlog => {
-    if (returnedBlog.status === 400){
-    throw new Error('Creating a new blog failed!')}
-    setBlogs(blogs.concat(returnedBlog))
-  })
-  .then(setSuccessMessage(`Blog '${blogObject.title}' added succesfully, written by: ${blogObject.author}`))
-  .then(setTimeout(() => {
-    setSuccessMessage(null)
-  }, 3000))
-  .catch(exception => {
-      setErrorMessage('Adding a new blog failed.')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 3000)
-      console.log('eionnistu')
-  })
-}
-const blogFormRef = useRef()
-
-const blogForm = () => (
-  <Togglable buttonLabel='new blog' ref={blogFormRef}>
-  <BlogForm createBlog={handleAddBlog} />
-</Togglable>
-)
-
-const blogList = () => (
-    blogs.map(blog => 
-          <Blog key={blog.id} blog={blog} handleRemoveBlog={handleRemoveBlog} bloguser={user.username}/> 
-)
-)
-
-
-const sortBlogs = blogs => {
-  return blogs.sort((a, b) => {
-    return b.likes - a.likes
-  })
-}
-
-const handleRemoveBlog = async (event, blog) => {
-  event.preventDefault()
-  const result = window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)
-
-  if (result === true) {
-    console.log(blog.id)
-    let id = blog.id
-    await blogService.remove(id)
-    const afterRemove = blogs.filter(poistettava => poistettava.id !== blog.id)
-    setBlogs(afterRemove)
+  const handleAddBlog = (blogObject) => {
+    blogFormRef.current.toggleVisibility()
+    blogService
+      .create(blogObject)
+      .then(returnedBlog => {
+        if (returnedBlog.status === 400){
+          throw new Error('Creating a new blog failed!')}
+        setBlogs(blogs.concat(returnedBlog))
+      })
+      .then(setSuccessMessage(`Blog '${blogObject.title}' added succesfully, written by: ${blogObject.author}`))
+      .then(setTimeout(() => {
+        setSuccessMessage(null)
+      }, 3000))
+      .catch(() => {
+        setErrorMessage('Adding a new blog failed.')
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 3000)
+        console.log('eionnistu')
+      })
   }
-}
+  const blogFormRef = useRef()
+
+  const blogForm = () => (
+    <Togglable buttonLabel='new blog' ref={blogFormRef}>
+      <BlogForm createBlog={handleAddBlog} />
+    </Togglable>
+  )
+
+  const blogList = () => (
+    blogs.map(blog =>
+      <Blog key={blog.id} blog={blog} handleRemoveBlog={handleRemoveBlog} bloguser={user.username}/>
+    )
+  )
+
+
+  const sortBlogs = blogs => {
+    return blogs.sort((a, b) => {
+      return b.likes - a.likes
+    })
+  }
+
+  const handleRemoveBlog = async (event, blog) => {
+    event.preventDefault()
+    const result = window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)
+
+    if (result === true) {
+      console.log(blog.id)
+      let id = blog.id
+      await blogService.remove(id)
+      const afterRemove = blogs.filter(poistettava => poistettava.id !== blog.id)
+      setBlogs(afterRemove)
+    }
+  }
 
 
 
